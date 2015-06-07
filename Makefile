@@ -11,7 +11,7 @@ unexport MAIN
 URWEB = urweb
 UWCC = $(shell $(shell $(URWEB) -print-ccompiler) -print-prog-name=gcc)
 UWFLAGS = 
-UWINCLUDE = -I$(shell $(URWEB) -print-cinclude)
+UWINCLUDE = $(shell $(URWEB) -print-cinclude)
 UWINCLUDEDIR = $(shell $(URWEB) -print-cinclude)/..
 UWVER = $(shell $(URWEB) -version)
 .PHONY: ./all
@@ -34,16 +34,20 @@ UWVER = $(shell $(URWEB) -version)
 	echo database\ dbname\=Captcha1  ;\
 	echo sql\ \.\.\/test\/Captcha1\.sql  ;\
 	echo library\ \.\.\/  ;\
+	echo safeGet\ Captcha1\/captcha\_show  ;\
+	echo safeGet\ Captcha1\/main  ;\
+	echo allow\ mime\ image\/gif  ;\
 	) > ./.cake3/tmp___test_Captcha1_in_1
-./.cake3/tmp___lib_in_2: ./Captcha.h ./Captcha.o ./Makefile
+./.cake3/tmp___lib_in_2: ./Captcha.h ./Captcha.o ./Makefile ./lib/captcha/libcaptcha.a
 	( \
 	echo   ;\
 	) > ./.cake3/tmp___lib_in_2
-./.cake3/tmp___lib_in_1: ./Captcha.h ./Captcha.o ./Makefile
+./.cake3/tmp___lib_in_1: ./Captcha.h ./Captcha.o ./Makefile ./lib/captcha/libcaptcha.a
 	( \
 	echo ffi\ \.\/Captcha  ;\
 	echo include\ \.\/Captcha\.h  ;\
 	echo link\ \.\/Captcha\.o  ;\
+	echo link\ \.\/lib\/captcha\/libcaptcha\.a  ;\
 	) > ./.cake3/tmp___lib_in_1
 .PHONY: ./test
 ./test: ./Makefile ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql
@@ -52,8 +56,8 @@ UWVER = $(shell $(URWEB) -version)
 .INTERMEDIATE: ./.fix-multy1
 ./.fix-multy1: ./Makefile ./test/Captcha1.urp $(call GUARD,URWEB) $(call GUARD,UWFLAGS) $(call GUARD,UWINCLUDEDIR) $(call GUARD,UWVER)
 	C_INCLUDE_PATH=$(UWINCLUDEDIR) $(URWEB) -dbms postgres $(UWFLAGS) ./test/Captcha1
-./Captcha.o: ./Captcha.c ./Makefile $(call GUARD,UWCC) $(call GUARD,UWCFLAGS) $(call GUARD,UWINCLUDE)
-	$(UWCC) -c $(UWINCLUDE) $(UWCFLAGS)  -o ./Captcha.o ./Captcha.c
+./Captcha.o: ./Captcha.c ./Makefile $(call GUARD,UWCC) $(call GUARD,UWCFLAGS) $(call GUARD,UWINCLUDE) $(call GUARD,UWINCLUDEDIR)
+	$(UWCC) -c -I$(UWINCLUDEDIR) -I$(UWINCLUDE) $(UWCFLAGS)  -o ./Captcha.o ./Captcha.c
 ./lib.urp: ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./Makefile
 	cat ./.cake3/tmp___lib_in_1 > ./lib.urp
 	cat ./.cake3/tmp___lib_in_2 >> ./lib.urp
@@ -109,6 +113,7 @@ ifneq ($(MAKECMDGOALS),clean)
 .INTERMEDIATE: ./.fix-multy1
 ./.fix-multy1:
 	-mkdir .cake3
+	$(MAKE) -C ./lib/captcha -f Makefile 
 	MAIN=1 $(MAKE) -f ./Makefile $(MAKECMDGOALS)
 .PHONY: ./Captcha.o
 ./Captcha.o: ./.fix-multy1
