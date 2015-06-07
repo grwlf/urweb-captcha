@@ -1,5 +1,5 @@
-Prerequsites
-------------
+Prerequisites
+-------------
 
 1. The Ur/Web compiler with PostgreSQL backend
 2. GNU Make
