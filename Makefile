@@ -38,15 +38,16 @@ UWVER = $(shell $(URWEB) -version)
 	echo safeGet\ Captcha1\/main  ;\
 	echo allow\ mime\ image\/gif  ;\
 	) > ./.cake3/tmp___test_Captcha1_in_1
-./.cake3/tmp___lib_in_2: ./Captcha.h ./Captcha.o ./Makefile ./lib/captcha/libcaptcha.a
+./.cake3/tmp___lib_in_2: ./Captcha.ur ./Captcha_ffi.h ./Captcha_ffi.o ./Makefile ./lib/captcha/libcaptcha.a
 	( \
 	echo   ;\
+	echo \.\/Captcha  ;\
 	) > ./.cake3/tmp___lib_in_2
-./.cake3/tmp___lib_in_1: ./Captcha.h ./Captcha.o ./Makefile ./lib/captcha/libcaptcha.a
+./.cake3/tmp___lib_in_1: ./Captcha.ur ./Captcha_ffi.h ./Captcha_ffi.o ./Makefile ./lib/captcha/libcaptcha.a
 	( \
-	echo ffi\ \.\/Captcha  ;\
-	echo include\ \.\/Captcha\.h  ;\
-	echo link\ \.\/Captcha\.o  ;\
+	echo ffi\ \.\/Captcha\_ffi  ;\
+	echo include\ \.\/Captcha\_ffi\.h  ;\
+	echo link\ \.\/Captcha\_ffi\.o  ;\
 	echo link\ \.\/lib\/captcha\/libcaptcha\.a  ;\
 	) > ./.cake3/tmp___lib_in_1
 .PHONY: ./test
@@ -56,8 +57,8 @@ UWVER = $(shell $(URWEB) -version)
 .INTERMEDIATE: ./.fix-multy1
 ./.fix-multy1: ./Makefile ./test/Captcha1.urp $(call GUARD,URWEB) $(call GUARD,UWFLAGS) $(call GUARD,UWINCLUDEDIR) $(call GUARD,UWVER)
 	C_INCLUDE_PATH=$(UWINCLUDEDIR) $(URWEB) -dbms postgres $(UWFLAGS) ./test/Captcha1
-./Captcha.o: ./Captcha.c ./Makefile $(call GUARD,UWCC) $(call GUARD,UWCFLAGS) $(call GUARD,UWINCLUDE) $(call GUARD,UWINCLUDEDIR)
-	$(UWCC) -c -I$(UWINCLUDEDIR) -I$(UWINCLUDE) $(UWCFLAGS)  -o ./Captcha.o ./Captcha.c
+./Captcha_ffi.o: ./Captcha_ffi.c ./Makefile $(call GUARD,UWCC) $(call GUARD,UWCFLAGS) $(call GUARD,UWINCLUDE) $(call GUARD,UWINCLUDEDIR)
+	$(UWCC) -c -I$(UWINCLUDEDIR) -I$(UWINCLUDE) $(UWCFLAGS)  -o ./Captcha_ffi.o ./Captcha_ffi.c
 ./lib.urp: ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./Makefile
 	cat ./.cake3/tmp___lib_in_1 > ./lib.urp
 	cat ./.cake3/tmp___lib_in_2 >> ./lib.urp
@@ -116,8 +117,8 @@ ifneq ($(MAKECMDGOALS),clean)
 	for l in lib/*;  do test -f $$l/.git || { echo $$l is empty. Have you forgot to 'git submodule update --init' ? ; exit 1; }; done
 	$(MAKE) -C ./lib/captcha -f Makefile 
 	MAIN=1 $(MAKE) -f ./Makefile $(MAKECMDGOALS)
-.PHONY: ./Captcha.o
-./Captcha.o: ./.fix-multy1
+.PHONY: ./Captcha_ffi.o
+./Captcha_ffi.o: ./.fix-multy1
 .PHONY: ./lib.urp
 ./lib.urp: ./.fix-multy1
 .PHONY: ./test/Captcha1.exe
@@ -130,7 +131,7 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 .PHONY: ./clean
 ./clean:
-	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_Captcha1_in_1 ./.cake3/tmp___test_Captcha1_in_2 ./Captcha.o ./lib.urp ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql ./test/Captcha1.urp
+	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_Captcha1_in_1 ./.cake3/tmp___test_Captcha1_in_2 ./Captcha_ffi.o ./lib.urp ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql ./test/Captcha1.urp
 	-rm -rf .cake3
 
 endif

@@ -1,12 +1,12 @@
-#include "Captcha.h"
+#include "Captcha_ffi.h"
 
 const int gifsize;
 int captcha(unsigned char im[70*200], unsigned char l[6]);
 void makegif(unsigned char im[70*200], unsigned char gif[gifsize]);
 
-uw_Captcha_captcha uw_Captcha_create(uw_context ctx, uw_Basis_unit u)
+FFI(captcha) FFI(create)(uw_context ctx, uw_Basis_unit u)
 {
-    uw_Captcha_captcha c;
+    FFI(captcha) c;
     c.blob.size = 700*200;
     c.blob.data = (char*)uw_malloc(ctx, c.blob.size);
     if(0 != captcha(c.blob.data, c.string) )
@@ -15,12 +15,12 @@ uw_Captcha_captcha uw_Captcha_create(uw_context ctx, uw_Basis_unit u)
 }
 
 
-uw_Basis_string uw_Captcha_get_string(uw_context ctx, uw_Captcha_captcha c)
+uw_Basis_string FFI(get_string)(uw_context ctx, FFI(captcha) c)
 {
   return c.string;
 }
 
-uw_Basis_blob uw_Captcha_get_gif(uw_context ctx, uw_Captcha_captcha c)
+uw_Basis_blob FFI(get_gif)(uw_context ctx, FFI(captcha) c)
 {
   uw_Basis_blob b;
   b.size = gifsize;

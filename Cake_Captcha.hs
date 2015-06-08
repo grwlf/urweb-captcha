@@ -7,10 +7,11 @@ import Cake_Captcha_P
 
 lib = uwlib (file "lib.urp") $ do
   [libcaptcha] <- liftMake $ externalMake (file "lib/captcha/libcaptcha.a")
-  ffi (file "Captcha.urs")
-  include (file "Captcha.h")
-  src (file "Captcha.c")
+  ffi (file "Captcha_ffi.urs")
+  include (file "Captcha_ffi.h")
+  src (file "Captcha_ffi.c")
   link libcaptcha
+  ur (file "Captcha.ur")
 
 (test, test_db) = uwapp_postgres (file "test/Captcha1.urp") $ do
   library lib

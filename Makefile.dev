@@ -38,15 +38,16 @@ UWVER = $(shell $(URWEB) -version)
 	echo safeGet\ Captcha1\/main  ;\
 	echo allow\ mime\ image\/gif  ;\
 	) > ./.cake3/tmp___test_Captcha1_in_1
-./.cake3/tmp___lib_in_2: ./Captcha.h ./Captcha.o ./Makefile.dev ./lib/captcha/libcaptcha.a
+./.cake3/tmp___lib_in_2: ./Captcha.ur ./Captcha_ffi.h ./Captcha_ffi.o ./Makefile.dev ./lib/captcha/libcaptcha.a
 	( \
 	echo   ;\
+	echo \.\/Captcha  ;\
 	) > ./.cake3/tmp___lib_in_2
-./.cake3/tmp___lib_in_1: ./Captcha.h ./Captcha.o ./Makefile.dev ./lib/captcha/libcaptcha.a
+./.cake3/tmp___lib_in_1: ./Captcha.ur ./Captcha_ffi.h ./Captcha_ffi.o ./Makefile.dev ./lib/captcha/libcaptcha.a
 	( \
-	echo ffi\ \.\/Captcha  ;\
-	echo include\ \.\/Captcha\.h  ;\
-	echo link\ \.\/Captcha\.o  ;\
+	echo ffi\ \.\/Captcha\_ffi  ;\
+	echo include\ \.\/Captcha\_ffi\.h  ;\
+	echo link\ \.\/Captcha\_ffi\.o  ;\
 	echo link\ \.\/lib\/captcha\/libcaptcha\.a  ;\
 	) > ./.cake3/tmp___lib_in_1
 .PHONY: ./test
@@ -58,8 +59,8 @@ UWVER = $(shell $(URWEB) -version)
 	C_INCLUDE_PATH=$(UWINCLUDEDIR) $(URWEB) -dbms postgres $(UWFLAGS) ./test/Captcha1
 ./Cakegen: ./Cake_Captcha.hs
 	cake3
-./Captcha.o: ./Captcha.c ./Makefile.dev $(call GUARD,UWCC) $(call GUARD,UWCFLAGS) $(call GUARD,UWINCLUDE) $(call GUARD,UWINCLUDEDIR)
-	$(UWCC) -c -I$(UWINCLUDEDIR) -I$(UWINCLUDE) $(UWCFLAGS)  -o ./Captcha.o ./Captcha.c
+./Captcha_ffi.o: ./Captcha_ffi.c ./Makefile.dev $(call GUARD,UWCC) $(call GUARD,UWCFLAGS) $(call GUARD,UWINCLUDE) $(call GUARD,UWINCLUDEDIR)
+	$(UWCC) -c -I$(UWINCLUDEDIR) -I$(UWINCLUDE) $(UWCFLAGS)  -o ./Captcha_ffi.o ./Captcha_ffi.c
 ./Makefile.dev: ./Cakegen
 	./Cakegen
 ./lib.urp: ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./Makefile.dev
@@ -122,8 +123,8 @@ ifneq ($(MAKECMDGOALS),clean)
 	MAIN=1 $(MAKE) -f ./Makefile.dev $(MAKECMDGOALS)
 .PHONY: ./Cakegen
 ./Cakegen: ./.fix-multy1
-.PHONY: ./Captcha.o
-./Captcha.o: ./.fix-multy1
+.PHONY: ./Captcha_ffi.o
+./Captcha_ffi.o: ./.fix-multy1
 .PHONY: ./Makefile.dev
 ./Makefile.dev: ./.fix-multy1
 .PHONY: ./lib.urp
@@ -138,7 +139,7 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 .PHONY: ./clean
 ./clean:
-	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_Captcha1_in_1 ./.cake3/tmp___test_Captcha1_in_2 ./Cakegen ./Captcha.o ./lib.urp ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql ./test/Captcha1.urp
+	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_Captcha1_in_1 ./.cake3/tmp___test_Captcha1_in_2 ./Cakegen ./Captcha_ffi.o ./lib.urp ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql ./test/Captcha1.urp
 	-rm -rf .cake3
 
 endif
