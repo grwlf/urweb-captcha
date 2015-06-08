@@ -20,7 +20,8 @@ fun main {} : transaction page =
             ok <- rpc(check_free ans cid);
             (if ok then alert "Correct!" else alert "Nope");
             cid' <- rpc(allocate {});
-            set i cid'
+            set i cid';
+            set s ""
           }/>
         </xml>
       }/>
