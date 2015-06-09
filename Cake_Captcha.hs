@@ -5,11 +5,21 @@ import Development.Cake3
 import Development.Cake3.Ext.UrWeb
 import Cake_Captcha_P
 
+captchamake = rule $ do
+  shell [cmd| git -C $(cwd) submodule update --init |]
+  shell [cmd| git -C $(cwd)/lib/captcha checkout -f |]
+  shell [cmd| touch -c @(file "lib/captcha/Makefile")|]
+
+libcaptcha = rule $ do
+  depend captchamake
+  shell [cmd| make -C $(cwd)/lib/captcha |]
+  shell [cmd| touch -c @(file "lib/captcha/libcaptcha.a")|]
+
 lib = uwlib (file "lib.urp") $ do
-  [libcaptcha] <- liftMake $ externalMake (file "lib/captcha/libcaptcha.a")
   ffi (file "Captcha_ffi.urs")
   include (file "Captcha_ffi.h")
   src (file "Captcha_ffi.c")
+  [libcaptcha] <- liftMake $ libcaptcha
   link libcaptcha
   ur (file "Captcha.ur")
 
@@ -24,7 +34,6 @@ lib = uwlib (file "lib.urp") $ do
   ur (file "test/Captcha1.ur")
 
 main = writeDefaultMakefiles $ do
-  prebuild [cmd| for l in lib/*;  do test -f $$$$l/.git || { echo $$$$l is empty. Have you forgot to 'git submodule update --init' ? ; exit 1; }; done |]
 
   rule $ do
     phony "lib"

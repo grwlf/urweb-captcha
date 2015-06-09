@@ -50,6 +50,13 @@ UWVER = $(shell $(URWEB) -version)
 	echo link\ \.\/Captcha\_ffi\.o  ;\
 	echo link\ \.\/lib\/captcha\/libcaptcha\.a  ;\
 	) > ./.cake3/tmp___lib_in_1
+./lib/captcha/libcaptcha.a: ./Makefile ./lib/captcha/Makefile
+	make -C ./lib/captcha
+	touch -c ./lib/captcha/libcaptcha.a
+./lib/captcha/Makefile: ./Makefile
+	git -C . submodule update --init
+	git -C ./lib/captcha checkout -f
+	touch -c ./lib/captcha/Makefile
 .PHONY: ./test
 ./test: ./Makefile ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql
 .PHONY: ./lib
@@ -107,6 +114,10 @@ ifneq ($(MAKECMDGOALS),clean)
 ./.cake3/tmp___lib_in_2: ./.fix-multy1
 .PHONY: ./.cake3/tmp___lib_in_1
 ./.cake3/tmp___lib_in_1: ./.fix-multy1
+.PHONY: ./lib/captcha/libcaptcha.a
+./lib/captcha/libcaptcha.a: ./.fix-multy1
+.PHONY: ./lib/captcha/Makefile
+./lib/captcha/Makefile: ./.fix-multy1
 .PHONY: ./test
 ./test: ./.fix-multy1
 .PHONY: ./lib
@@ -114,8 +125,6 @@ ifneq ($(MAKECMDGOALS),clean)
 .INTERMEDIATE: ./.fix-multy1
 ./.fix-multy1:
 	-mkdir .cake3
-	for l in lib/*;  do test -f $$l/.git || { echo $$l is empty. Have you forgot to 'git submodule update --init' ? ; exit 1; }; done
-	$(MAKE) -C ./lib/captcha -f Makefile 
 	MAIN=1 $(MAKE) -f ./Makefile $(MAKECMDGOALS)
 .PHONY: ./Captcha_ffi.o
 ./Captcha_ffi.o: ./.fix-multy1
@@ -131,7 +140,7 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 .PHONY: ./clean
 ./clean:
-	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_Captcha1_in_1 ./.cake3/tmp___test_Captcha1_in_2 ./Captcha_ffi.o ./lib.urp ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql ./test/Captcha1.urp
+	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_Captcha1_in_1 ./.cake3/tmp___test_Captcha1_in_2 ./Captcha_ffi.o ./lib.urp ./lib/captcha/Makefile ./lib/captcha/libcaptcha.a ./test/Captcha1.db ./test/Captcha1.exe ./test/Captcha1.sql ./test/Captcha1.urp
 	-rm -rf .cake3
 
 endif
