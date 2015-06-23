@@ -13,9 +13,14 @@ fun blob (i:int) : transaction page =
   returnBlob c.Data (blessMime "image/gif")
 
 fun check_free (ans:string) (i:int) : transaction bool =
-  c <- oneRow1(SELECT C.Answer FROM captchas AS C WHERE C.Id = {[i]});
-  dml(DELETE FROM captchas WHERE Id = {[i]});
-  return (ans = c.Answer)
+  mb <- oneOrNoRows1(SELECT C.Answer FROM captchas AS C WHERE C.Id = {[i]});
+  case mb of
+  |Some c =>
+    dml(DELETE FROM captchas WHERE Id = {[i]});
+    return (ans = c.Answer)
+  |None =>
+    return False
+
 
 fun allocate_opts (o:{GCdepth: int}) : transaction int =
   c <- create {};
