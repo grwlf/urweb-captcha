@@ -1,7 +1,7 @@
 #ifndef CAPTCHA_H
 #define CAPTCHA_H
 
-#include <urweb/urweb.h>
+#include <urweb.h>
 
 #define FFI(x) uw_Captcha_ffi_##x
 

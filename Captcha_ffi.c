@@ -17,7 +17,11 @@ FFI(captcha) FFI(create)(uw_context ctx, uw_Basis_unit u)
 
 uw_Basis_string FFI(get_string)(uw_context ctx, FFI(captcha) c)
 {
-  return c.string;
+  uw_Basis_string s;
+  s = (char*)uw_malloc(ctx, 7);
+  strncpy(s, c.string, 6);
+  s[6] = 0;
+  return s;
 }
 
 uw_Basis_blob FFI(get_gif)(uw_context ctx, FFI(captcha) c)
