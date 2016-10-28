@@ -14,7 +14,8 @@ let
       export PATH="$PATH:${pkgs.imagemagick}/bin/"
       cp -r $src/* .
       ls -l
-      make
+      make captcha
+      make all
       cp libcaptcha.a $out
     '';
   };
@@ -38,7 +39,7 @@ rec {
     ];
   };
 
-  tests = [(
+  captcha-test =
     mkExe {
       name = "CaptchaTest";
       dbms = "sqlite";
@@ -56,8 +57,7 @@ rec {
         (sys "string")
         (src1 ./test/Captcha1.ur)
       ];
-    }
-  )];
+    };
 
 }
 
