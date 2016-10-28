@@ -1,8 +1,8 @@
 Prerequisites
 -------------
 
-1. [NIX](www.nixos.org/nix) package manager (`nix-build` tool and `nixpkgs` repo)
-2. [urweb-build](github.com/grwlf/urweb-build) expression set
+1. [NIX](http://www.nixos.org/nix) package manager (`nix-build` tool and `nixpkgs` repo)
+2. [urweb-build](http://github.com/grwlf/urweb-build) expression set
 
 
 Installing and running the test
@@ -13,12 +13,12 @@ Installing and running the test
 
   2. Follow the procedure:
 
-    git clone https://github.com/grwlf/urweb-captcha --recursive
-    cd urweb-captcha
-    nix-build build.nix -A captcha-test
+         git clone https://github.com/grwlf/urweb-captcha --recursive
+         cd urweb-captcha
+         nix-build build.nix -A captcha-test
 
-    ./result/mkdb.sh
-    ./result/CaptchaTest.exe
+         ./result/mkdb.sh
+         ./result/CaptchaTest.exe
 
-    browser http://127.0.0.1:8080/Captcha1/main
+         browser http://127.0.0.1:8080/Captcha1/main
 

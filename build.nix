@@ -1,10 +1,10 @@
 { libraries ? {}
 , pkgs ? import <nixpkgs> {}
-, uwb ? import <urweb-build> {inherit libraries pkgs;}
 } :
 
-
 let
+
+  uwb = import <urweb-build> {inherit libraries pkgs; };
 
   libcaptcha = pkgs.stdenv.mkDerivation {
     name = "libcaptcha";
@@ -39,25 +39,26 @@ rec {
     ];
   };
 
-  captcha-test =
-    mkExe {
-      name = "CaptchaTest";
-      dbms = "sqlite";
+  captcha-test = mkExe {
 
-      libraries = {
-        inherit captcha;
-      };
+    name = "CaptchaTest";
 
-      statements = [
-        (rule "safeGet Captcha1/captcha_show")
-        (rule "safeGet Captcha1/main")
-        (rule "allow mime image/gif")
-        (sys "list")
-        (sys "char")
-        (sys "string")
-        (src1 ./test/Captcha1.ur)
-      ];
+    dbms = "sqlite";
+
+    libraries = {
+      inherit captcha;
     };
+
+    statements = [
+      (rule "safeGet Captcha1/captcha_show")
+      (rule "safeGet Captcha1/main")
+      (rule "allow mime image/gif")
+      (sys "list")
+      (sys "char")
+      (sys "string")
+      (src1 ./test/Captcha1.ur)
+    ];
+  };
 
 }
 
