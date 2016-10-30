@@ -14,7 +14,7 @@ let
       export PATH="$PATH:${pkgs.imagemagick}/bin/"
       cp -r $src/* .
       ls -l
-      make captcha
+      make captcha unfont
       make all
       cp libcaptcha.a $out
     '';
